@@ -14,13 +14,8 @@
         <h1 class="text-2xl font-semibold mb-4 text-white">ITF-14 Generator</h1>
 
         <div class="">
-            <label for="piInput" class="block font-medium text-white mb-2">Packaging Indicator (PI)</label>
-            <input type="number" id="piInput" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-900 text-white" placeholder="Enter PI (1-8)" min="0" max="9">
-        </div>
-
-        <div class="mb-4">
-            <label for="upcInput" class="block font-medium text-white mb-2">Enter UPC / EAN-13 Code (without check digit)</label>
-            <input type="text" id="upcInput" class="w-full border border-gray-300 rounded-lg p-2 bg-gray-900 text-white" placeholder="Enter 12 or 13 digit code">
+            <label for="itf14Input" class="block font-medium text-white mb-2">Enter 14-Digit ITF Code</label>
+            <input type="text" id="itf14Input" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-900 text-white" placeholder="Enter 14-digit ITF code" maxlength="14">
         </div>
 
         <button onclick="generateITF14()" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">Generate</button>
@@ -38,65 +33,20 @@
     </div>
 
     <script>
-        function calculateITF14CheckDigit(number) {
-            let sum = 0;
-            for (let i = 0; i < number.length; i++) {
-                let digit = parseInt(number[i]);
-                if ((number.length - i) % 2 === 0) {
-                    sum += digit * 1; // even positions multiply by 1
-                } else {
-                    sum += digit * 3; // odd positions multiply by 3
-                }
-            }
-            let checkDigit = (10 - (sum % 10)) % 10;
-            return checkDigit;
-        }
-
-        function formatITF14Display(fullITF14) {
-            // Add two spaces after 1st, 3rd, 8th, and 13th digits for display purposes only
-            return (
-                fullITF14.slice(0, 1) + "  " +
-                fullITF14.slice(1, 3) + "  " +
-                fullITF14.slice(3, 8) + "  " +
-                fullITF14.slice(8, 13) + "  " +
-                fullITF14.slice(13)
-            );
-        }
-
         function generateITF14() {
-            let piInput = document.getElementById("piInput").value;
-            let upcInput = document.getElementById("upcInput").value;
+            let itf14Input = document.getElementById("itf14Input").value;
 
-            if (!piInput || piInput < 0 || piInput > 9) {
-            alert("Please enter a valid Packaging Indicator (0-9).");
-            return;
-            }
-
-            if (upcInput.length !== 12 && upcInput.length !== 13) {
-                alert("Enter a valid 12 or 13 digit UPC / EAN-13 code (without check digit).");
+            if (itf14Input.length !== 14) {
+                alert("Please enter a valid 14-digit ITF code.");
                 return;
             }
 
-            // Remove check digit if EAN-13
-            if (upcInput.length === 13) {
-                upcInput = upcInput.slice(0, -1); // Remove the last check digit
-            }
-
-            // Combine PI and UPC/EAN code
-            let itf14WithoutCheck = piInput + upcInput;
-
-            // Calculate ITF-14 check digit
-            let checkDigit = calculateITF14CheckDigit(itf14WithoutCheck);
-
-            // Full ITF-14 code
-            let fullITF14 = itf14WithoutCheck + checkDigit;
-
             // Format ITF-14 for display (add spaces after specific positions)
-            let formattedITF14 = formatITF14Display(fullITF14);
+            let formattedITF14 = formatITF14Display(itf14Input);
 
             // Generate barcode
             var svg = document.getElementById("barcodeSVG");
-            JsBarcode(svg, fullITF14, {
+            JsBarcode(svg, itf14Input, {
                 format: "ITF",
                 displayValue: true,
                 text: formattedITF14, // Use the formatted ITF-14 with spaces for display
@@ -129,15 +79,25 @@
             // Insert the stroke rect on top of the barcode
             svg.appendChild(strokeRect); // This will place the strokeRect after the barcode, visually putting it on top
 
-
             // Convert SVG to Blob and create a download link
             var serializer = new XMLSerializer();
             var svgBlob = new Blob([serializer.serializeToString(svg)], {type: "image/svg+xml"});
             var svgUrl = URL.createObjectURL(svgBlob);
             var downloadLink = document.getElementById("downloadLink");
             downloadLink.href = svgUrl;
-            downloadLink.download = fullITF14 + ".svg"; // Set the filename for SVG
+            downloadLink.download = itf14Input + ".svg"; // Set the filename for SVG
             downloadLink.style.display = "block";
+        }
+
+        function formatITF14Display(fullITF14) {
+            // Add two spaces after 1st, 3rd, 8th, and 13th digits for display purposes only
+            return (
+                fullITF14.slice(0, 1) + "  " +
+                fullITF14.slice(1, 3) + "  " +
+                fullITF14.slice(3, 8) + "  " +
+                fullITF14.slice(8, 13) + "  " +
+                fullITF14.slice(13)
+            );
         }
     </script>
 </body>

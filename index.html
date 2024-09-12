@@ -13,7 +13,7 @@
 
         <div class="">
             <label for="piInput" class="block font-medium text-white mb-2">Packaging Indicator (PI)</label>
-            <input type="number" id="piInput" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-900 text-white" placeholder="Enter PI (1-8)" min="1" max="8">
+            <input type="number" id="piInput" class="w-full border border-gray-300 rounded-lg p-2 mb-4 bg-gray-900 text-white" placeholder="Enter PI (1-8)" min="0" max="9">
         </div>
 
         <div class="mb-4">
@@ -65,9 +65,9 @@
             let piInput = document.getElementById("piInput").value;
             let upcInput = document.getElementById("upcInput").value;
 
-            if (!piInput || piInput < 1 || piInput > 8) {
-                alert("Please enter a valid Packaging Indicator (1-8).");
-                return;
+            if (!piInput || piInput < 0 || piInput > 9) {
+            alert("Please enter a valid Packaging Indicator (0-9).");
+            return;
             }
 
             if (upcInput.length !== 12 && upcInput.length !== 13) {

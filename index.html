@@ -19,8 +19,8 @@
         </div>
 
         <div class="mb-4">
-            <label for="upcInput" class="block font-medium text-white mb-2">Enter UPC / EAN-13 Code (without check digit)</label>
-            <input type="text" id="upcInput" class="w-full border border-gray-300 rounded-lg p-2 bg-gray-900 text-white" placeholder="Enter 12 or 13 digit code">
+            <label for="upcInput" class="block font-medium text-white mb-2">Enter UPC / EAN-13 Code</label>
+            <input type="text" id="upcInput" class="w-full border border-gray-300 rounded-lg p-2 bg-gray-900 text-white" placeholder="Enter 13 digit code">
         </div>
 
         <button onclick="generateITF14()" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">Generate</button>
@@ -72,8 +72,8 @@
             return;
             }
 
-            if (upcInput.length !== 12 && upcInput.length !== 13) {
-                alert("Enter a valid 12 or 13 digit UPC / EAN-13 code (without check digit).");
+            if (upcInput.length !== 13) {
+                alert("Enter a valid 13 digit UPC / EAN-13 code.");
                 return;
             }
 
